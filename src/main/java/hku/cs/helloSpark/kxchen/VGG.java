@@ -30,7 +30,7 @@ public class VGG {
 */	
         // Load the trained model
         File locationToSave = new File("vgg16.zip");
-        ComputationGraph vgg16 = ModelSerializer.restoreComputationGraph(locationToSave);
+        //ComputationGraph vgg16 = ModelSerializer.restoreComputationGraph(locationToSave);
 
 
         //get("/hello", (req, res) -> "Hello World");
@@ -65,7 +65,7 @@ public class VGG {
             File file = tempFile.toFile();
 
             // Convert file to INDArray
-            NativeImageLoader loader = new NativeImageLoader(224, 224, 3);
+            /*NativeImageLoader loader = new NativeImageLoader(224, 224, 3);
             INDArray image = loader.asMatrix(file);
 
             // delete the physical file, if left our drive would fill up over time
@@ -76,13 +76,13 @@ public class VGG {
             scaler.transform(image);
 
             //Inference returns array of INDArray, index[0] has the predictions
-            //~~~~~~~~INDArray[] output = vgg16.output(false,image);
+            INDArray[] output = vgg16.output(false,image);
 
             // convert 1000 length numeric index of probabilities per label
             // to sorted return top 5 convert to string using helper function VGG16.decodePredictions
             // "predictions" is string of our results
-            //~~~~String predictions = TrainedModels.VGG16.decodePredictions(output[0]);
-
+            String predictions = TrainedModels.VGG16.decodePredictions(output[0]);
+*/
 
             return "<h1> '" + "predictions"  + "' </h1>" +
                     "Would you like to try another" +

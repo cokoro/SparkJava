@@ -1,3 +1,7 @@
+#dir
+target
+upload
+
 # Compiled class file
 *.class
 
