@@ -29,9 +29,8 @@ public class VGG {
         secure(keyStoreLocation, keyStorePassword, null,null );
 */	
         // Load the trained model
-        File locationToSave = new File("vgg16.zip");
-        //ComputationGraph vgg16 = ModelSerializer.restoreComputationGraph(locationToSave);
-
+        File locationToSave = new File("VGG.zip");
+	ComputationGraph vgg16= ModelSerializer.restoreComputationGraph(locationToSave);
 
         //get("/hello", (req, res) -> "Hello World");
         // make upload directory for user submitted images
@@ -54,7 +53,8 @@ public class VGG {
         get("VGGpredict", (req, res) -> form);
 
         post("/getPredictions", (req, res) -> {
-            Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
+
+	    Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
             req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
 
             try (InputStream input = req.raw().getPart("uploaded_file").getInputStream()) { // getPart needs to use same "name" as input field in form
@@ -65,7 +65,7 @@ public class VGG {
             File file = tempFile.toFile();
 
             // Convert file to INDArray
-            /*NativeImageLoader loader = new NativeImageLoader(224, 224, 3);
+            NativeImageLoader loader = new NativeImageLoader(224, 224, 3);
             INDArray image = loader.asMatrix(file);
 
             // delete the physical file, if left our drive would fill up over time
@@ -75,6 +75,7 @@ public class VGG {
             DataNormalization scaler = new VGG16ImagePreProcessor();
             scaler.transform(image);
 
+
             //Inference returns array of INDArray, index[0] has the predictions
             INDArray[] output = vgg16.output(false,image);
 
@@ -82,9 +83,9 @@ public class VGG {
             // to sorted return top 5 convert to string using helper function VGG16.decodePredictions
             // "predictions" is string of our results
             String predictions = TrainedModels.VGG16.decodePredictions(output[0]);
-*/
 
-            return "<h1> '" + "predictions"  + "' </h1>" +
+
+            return "<h1> '" + predictions  + "' </h1>" +
                     "Would you like to try another" +
                     form;
 
