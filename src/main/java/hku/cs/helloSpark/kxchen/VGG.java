@@ -19,6 +19,15 @@ import java.nio.file.StandardCopyOption;
 
 import javax.servlet.MultipartConfigElement;
 
+//addimage
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.nd4j.linalg.dataset.api.preprocessor.ImagePreProcessingScaler;
+
+
 
 public class VGG {
     public static void main(String[] args)  throws Exception {
@@ -29,8 +38,9 @@ public class VGG {
         secure(keyStoreLocation, keyStorePassword, null,null );
 */	
         // Load the trained model
-        File locationToSave = new File("VGG.zip");
-	ComputationGraph vgg16= ModelSerializer.restoreComputationGraph(locationToSave);
+        File locationToSave = new File("demo_model.zip");
+	MultiLayerNetwork vgg16=ModelSerializer.restoreMultiLayerNetwork(locationToSave);
+//	ComputationGraph vgg16= ModelSerializer.restoreComputationGraph(locationToSave);
 
         //get("/hello", (req, res) -> "Hello World");
         // make upload directory for user submitted images
@@ -63,27 +73,37 @@ public class VGG {
 
 
             File file = tempFile.toFile();
-
+/*	    //Load picture
+            Image src = javax.imageio.ImageIO.read(file); // 构造Image对象  
+	int wideth = src.getWidth(null); // 得到源图宽  
+	int height = src.getHeight(null); // 得到源图长  
+	BufferedImage tag = new BufferedImage(wideth, height,  
+	BufferedImage.TYPE_INT_RGB);  
+	tag.getGraphics().drawImage(src, 0, 0, wideth, height, null); // 绘制缩小后的图     
+	ImageIO.write(tag, "JPEG", response.getOutputStream());
+*/
             // Convert file to INDArray
-            NativeImageLoader loader = new NativeImageLoader(224, 224, 3);
-            INDArray image = loader.asMatrix(file);
+            NativeImageLoader loader = new NativeImageLoader(218, 178, 3);
+            INDArray image = loader.asRowVector(file);
 
             // delete the physical file, if left our drive would fill up over time
             file.delete();
 
             // Mean subtraction pre-processing step for VGG
-            DataNormalization scaler = new VGG16ImagePreProcessor();
-            scaler.transform(image);
+	    //DataNormalization scaler = new ImagePreProcessingScaler(0,1);
+            //scaler.transform(image);
+            //DataNormalization scaler = new VGG16ImagePreProcessor();
+            //scaler.transform(image);
 
 
             //Inference returns array of INDArray, index[0] has the predictions
-            INDArray[] output = vgg16.output(false,image);
-
+            //INDArray[] output = vgg16.output(false,image);
             // convert 1000 length numeric index of probabilities per label
             // to sorted return top 5 convert to string using helper function VGG16.decodePredictions
             // "predictions" is string of our results
-            String predictions = TrainedModels.VGG16.decodePredictions(output[0]);
-
+            //String predictions = TrainedModels.VGG16.decodePredictions(output[0]);
+	    INDArray pre = vgg16.output(image);
+	    String predictions = pre.toString();
 
             return "<h1> '" + predictions  + "' </h1>" +
                     "Would you like to try another" +
