@@ -1,6 +1,7 @@
 #dir
 target
 upload
+*.jpg
 
 # Compiled class file
 *.class
